@@ -88,6 +88,8 @@ export default Vue.extend({
   methods: {
     
     clickModifyfunction() {
+      let checked=$("[name='cbxteam']:checked").val();
+      console.log(checked);
       this.fixed="sdkfjsk,diosf@123.com";
       //this.$emit("updateByChild", [this.Name, this.Url]);
     },
