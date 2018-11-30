@@ -54,6 +54,9 @@
     <input type="text" v-model="Name" name="" id="">
     <input type="text" v-model="Url" name="" id="">
     <input type="text" name="" id="" v-model="fixed">
+    <input type="checkbox" name="cbxteam" id="weilong" value="1"><label for="weilong">威龙车队</label> 
+    <input type="checkbox" name="cbxteam" id="tatong" value="2"><label for="tatong">塔通运输</label> 
+    <input type="checkbox" name="cbxteam" id="shengchan" value="3"><label for="shengchan">生产车队</label> 
     <input type="button" value="submit" v-on:click="clickModifyfunction()">
   </div>
 </template>
