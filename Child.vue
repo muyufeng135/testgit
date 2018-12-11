@@ -64,10 +64,12 @@
 // import $ from 'jquery'
 //import * as Common from "./Common/Format";
 import Vue from "vue";
-import bootstrap from "bootstrap";
+// import bootstrap from "bootstrap";
 //import bootstrapTable from 'bootstrap-table'
-//import './node_modules/bootstrap/dist/js/bootstrap.min.js'
-import "./node_modules/bootstrap-table/dist/bootstrap-table.js";
+// import './node_modules/bootstrap/dist/js/bootstrap.min.js'
+// import "./node_modules/bootstrap-table/dist/bootstrap-table.min.js";
+import './Style/bootstrap-table.js'
+import "./Style/bootstrap.js";
 import "./Style/bootstrap-table-zh-CN.js";
 import { WebapiService, RequestEntity } from "./Service";
 //const common = new Common.Format();
@@ -336,9 +338,10 @@ export default Vue.extend({
 });
 </script>
 <style>
-/* @import './node_modules/bootstrap/dist/css/bootstrap.css'; */
-@import "./Style/bootstrap.min.css";
-@import "./Style/bootstrap-table.min.css";
+ /* @import './node_modules/bootstrap/dist/css/bootstrap.css';
+ @import './node_modules/bootstrap-table/dist/bootstrap-table.css';  */
+@import "./Style/bootstrap.css";
+@import "./Style/bootstrap-table.css";
 </style>
 
 
