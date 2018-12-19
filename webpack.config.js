@@ -59,7 +59,7 @@ module.exports = {
                 test: /\.(png|jpg|gif|woff|svg|ttf|eot|woff2)$/,
                 use: [
                     {
-                        loader: 'url-loader?limit=1024&name=[path][name].[ext]&outputPath=publishImg/&publicPath=publish/',
+                        loader: 'url-loader?limit=1024&name=[path][name].[ext]&publicPath=publish/',
                     }
                 ]
             },
@@ -75,6 +75,7 @@ module.exports = {
         new webpack.ProvidePlugin({
             $:"jquery",
             jQuery:"jquery",
+            'window.jQuery':"jquery"
         })
     ],
     devServer: {

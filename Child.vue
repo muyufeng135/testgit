@@ -1,6 +1,36 @@
 <template>
   <div>
     <div style="height:50px;line-height:50px;background-color:#f7f7f7;padding-left:20px;font-size: 18px;">
+      <div style="display:inline-block;">
+        <div
+          id="searchDate"
+          class="input-group date form_datetime"
+          style="display:inline-block;width:250px;"
+          data-link-field="TIME"
+        >
+          <input
+            class="form-control"
+            placeholder="日期"
+            style="width:160px;margin-top:8px;"
+            type="text"
+            value=""
+            readonly
+          >
+          <span
+            class="input-group-addon"
+            style="height:34px;width:40px;display:inline-block;"
+          ><span class="glyphicon glyphicon-remove"></span></span>
+          <span
+            class="input-group-addon"
+            style="height:34px;width:39px;border-radius:0px;display:inline-block;"
+          ><span class="glyphicon glyphicon-th"></span></span>
+        </div>
+        <input
+          type="hidden"
+          id="TIME"
+          value=""
+        />
+      </div>
       <button
         id="exprot"
         style="background-color:#00CD00;"
@@ -51,48 +81,80 @@
       data-page-list="[10,15,20]"
     >
     </table>
-    <input type="text" v-model="Name" name="" id="">
-    <input type="text" v-model="Url" name="" id="">
-    <input type="text" name="" id="" v-model="fixed">
-    <input type="checkbox" name="cbxteam" id="weilong" value="1"><label for="weilong">威龙车队</label> 
-    <input type="checkbox" name="cbxteam" id="tatong" value="2"><label for="tatong">塔通运输</label> 
-    <input type="checkbox" name="cbxteam" id="shengchan" value="3"><label for="shengchan">生产车队</label> 
-    <input type="button" value="submit" v-on:click="clickModifyfunction()">
+    <input
+      type="text"
+      v-model="Name"
+      name=""
+      id=""
+    >
+    <input
+      type="text"
+      v-model="Url"
+      name=""
+      id=""
+    >
+    <input
+      type="text"
+      name=""
+      id=""
+      v-model="fixed"
+    >
+    <input
+      type="checkbox"
+      name="cbxteam"
+      id="weilong"
+      value="1"
+    ><label for="weilong">威龙车队</label>
+    <input
+      type="checkbox"
+      name="cbxteam"
+      id="tatong"
+      value="2"
+    ><label for="tatong">塔通运输</label>
+    <input
+      type="checkbox"
+      name="cbxteam"
+      id="shengchan"
+      value="3"
+    ><label for="shengchan">生产车队</label>
+    <input
+      type="button"
+      value="submit"
+      v-on:click="clickModifyfunction()"
+    >
   </div>
 </template>
 <script lang="ts">
-// import $ from 'jquery'
 //import * as Common from "./Common/Format";
+import * as tool from "./Common/tool";
 import Vue from "vue";
-// import bootstrap from "bootstrap";
-//import bootstrapTable from 'bootstrap-table'
-// import './node_modules/bootstrap/dist/js/bootstrap.min.js'
-// import "./node_modules/bootstrap-table/dist/bootstrap-table.min.js";
-import './Style/bootstrap-table.js'
+import moment from "moment";
+import "./Scripts/datetimepicker/bootstrap-datetimepicker.js";
+import "./Scripts/datetimepicker/bootstrap-datetimepicker.zh-CN.js";
+import "./Style/bootstrap-table.js";
 import "./Style/bootstrap.js";
 import "./Style/bootstrap-table-zh-CN.js";
 import { WebapiService, RequestEntity } from "./Service";
 //const common = new Common.Format();
-let day: number = 1;
+let day: string = "";
 let sortName: string = "time";
-let UserType:number=9;
+let UserType: number = 9;
 
 export default Vue.extend({
   name: "parent",
-  props: ["Columns", "status"],
+  props: ["Columns"],
   data() {
     return {
       Name: "child request",
       Url:
-        "/api/Tb_Ts_Request/GetListByParam?sortName=time&role=9&filter=&day=1&status="
+        "/api/Tb_Ts_Request/GetListByParam?sortName=time&role=9&filter=&day="+day+"&status="
     };
   },
   methods: {
-    
     clickModifyfunction() {
-      let checked=$("[name='cbxteam']:checked").val();
+      let checked = $("[name='cbxteam']:checked").val();
       console.log(checked);
-      this.fixed="sdkfjsk,diosf@123.com";
+      this.fixed = "sdkfjsk,diosf@123.com";
       //this.$emit("updateByChild", [this.Name, this.Url]);
     },
     formattervehicletype(diccode: string): string {
@@ -280,12 +342,38 @@ export default Vue.extend({
     }
   },
   mounted() {
+    day=tool.formatterDate(new Date().toString(), "yyyy-MM-dd");
+    $("#searchDate input").val(
+      tool.formatterDate(new Date().toString(), "yyyy-MM-dd")
+    );
+    $("#TIME").val(tool.formatterDate(new Date().toString(), "yyyy-MM-dd"));
     $("#tb").bootstrapTable({
       columns: this.Columns
     });
+    $("#searchDate")
+      .datetimepicker({
+        language: "zh-CN",
+        weekStart: 0, //一周从哪一天开始
+        todayBtn: 1, //
+        autoclose: 1,
+        todayHighlight: 1,
+        minView: "month",
+        startView: 2,
+        forceParse: 0
+        //showMeridian: 1,
+        //startDate: new Date()
+      })
+      .on("changeDate", function(ev: any) {
+        // console.log(ev.date.getTimezoneOffset() );
+        // console.log(new Date(ev.date.getTime()+(ev.date.getTimezoneOffset() * 60000)));
+        $("#searchDate input").val(
+          tool.formatterDate(new Date(ev.date.getTime()+(ev.date.getTimezoneOffset() * 60000)), "yyyy-MM-dd")
+        );
+        $("#TIME").val(tool.formatterDate(new Date(ev.date.getTime()+(ev.date.getTimezoneOffset() * 60000)), "yyyy-MM-dd"));
+      });
     //$('#tb').bootstrapTable('load', this.data);
     let service = new WebapiService();
-    service.GetRequestList().then(data => {
+    service.GetRequestList(day).then(data => {
       $("#tb").bootstrapTable("load", data);
       this.RetrieveStatistic();
     });
@@ -315,33 +403,34 @@ export default Vue.extend({
         $(this).addClass("btn-warning");
         $("#stcgroup").empty();
         $("#statusgroup").empty();
-        day = parseInt($(".btn-success").attr("data-val") as string);
+        //day = parseInt($(".btn-success").attr("data-val") as string);
         sortName = $(this).attr("data-val") as string;
         that.RetrieveStatistic();
       });
     });
   },
   created() {
-    console.log(this.status);
+    //console.log(this.status);
   },
-  computed:{
-    fixed:{
-      get():string{
-        return this.Name+","+this.Url;
+  computed: {
+    fixed: {
+      get(): string {
+        return this.Name + "," + this.Url;
       },
-      set(newVal:string){
-        this.Url=newVal.split(',')[0];
-        this.Name=newVal.split(',')[1];
+      set(newVal: string) {
+        this.Url = newVal.split(",")[0];
+        this.Name = newVal.split(",")[1];
       }
     }
   }
 });
 </script>
 <style>
- /* @import './node_modules/bootstrap/dist/css/bootstrap.css';
+/* @import './node_modules/bootstrap/dist/css/bootstrap.css';
  @import './node_modules/bootstrap-table/dist/bootstrap-table.css';  */
 @import "./Style/bootstrap.css";
 @import "./Style/bootstrap-table.css";
+@import "./Style/bootstrap-datetimepicker.css";
 </style>
 
 

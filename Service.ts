@@ -6,10 +6,10 @@ export interface RequestEntity{
     Requestcount:number,
 }
 export class WebapiService{
-    GetRequestList():Promise<any>{
+    GetRequestList(day:string):Promise<any>{
         return new Promise(function(resolve,reject){
             $.ajax({
-                url:"/api/Tb_Ts_Request/GetListByParam?sortName=time&role=9&filter=&day=1&status=",
+                url:"/api/Tb_Ts_Request/GetListByParam?sortName=time&role=9&filter=&day="+day+"&status=",
                 method:"get",
                 contentType:"application/json",
                 success:data=>{

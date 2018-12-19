@@ -1,14 +1,9 @@
 import Vue from 'vue';
-//import './Common/main.js';
-// import app from './Parent.vue';
 import { WebapiService, RequestEntity } from "./Service";
 const service = new WebapiService();
-//import * as Common from "./Common/Format";
-//const common = new Common.Format();
 import app from './Child.vue';
 Vue.config.devtools = true;
 let vehicleTypeList: Array<any>;
-declare var mystatus: number;
 window.onload = function () {
     var v = new Vue({
         el: "#app",
@@ -62,7 +57,9 @@ window.onload = function () {
                 }
             },
             formatterDate(v: any): string {
-                let format: string = "yyyy-MM-dd hh:mm";
+                console.log(v);
+                let format = "yyyy-MM-dd hh:mm";
+
                 if (!v) return "";
                 var d = v;
                 if (typeof v === 'string') {
