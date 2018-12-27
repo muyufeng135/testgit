@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import * as request from './test';
 import { WebapiService, RequestEntity } from "./Service";
 const service = new WebapiService();
 import app from './Child.vue';
@@ -44,10 +45,14 @@ window.onload = function () {
         },
         methods: {
             formatterVehicleType(value: any): string {
-
                 let match = vehicleTypeList.filter((val: any): any => {
                     return val.Diccode === value;
                 });
+                var obj=new request.GetTableData(1,10,"id","asc");
+                obj.GetData().then(data=>{
+                    console.log(data);
+                });
+                let entity:request.default;
                 //console.log(match);
                 if (match.length > 0) {
                     //console.log(match[0].Dicname);

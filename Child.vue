@@ -122,6 +122,26 @@
       value="submit"
       v-on:click="clickModifyfunction()"
     >
+    <div class="modal fade" id="phoneDialog" role="dialog" aria-hidden="true" style="width:100%;height:100%;overflow-y:hidden;">
+            <div class="modal-dialog">
+                <div class="modal-content" style="width:400px;height:220px;">
+                    <div class="modal-header">
+                        输入手机号码
+                    </div>
+                    <div class="modal-body" style="width:400px;height:100px;">
+                        <input id="txtPhone" class="form-control col-sm-4" type="text" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" style="float:right;margin:10px;">
+                            关闭
+                        </button>
+                        <button type="button" id="phoneSavebtn" data-idval="" @click="PhoneSave()" class="btn btn-primary" style="float:right;margin:10px;">
+                            提交
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
   </div>
 </template>
 <script lang="ts">
@@ -152,10 +172,14 @@ export default Vue.extend({
   },
   methods: {
     clickModifyfunction() {
-      let checked = $("[name='cbxteam']:checked").val();
-      console.log(checked);
-      this.fixed = "sdkfjsk,diosf@123.com";
+      // let checked = $("[name='cbxteam']:checked").val();
+      // console.log(checked);
+      // this.fixed = "sdkfjsk,diosf@123.com";
       //this.$emit("updateByChild", [this.Name, this.Url]);
+      $("#phoneDialog").modal("toggle");
+    },
+    PhoneSave(){
+      alert($("#txtPhone").val());
     },
     formattervehicletype(diccode: string): string {
       var typeList = JSON.parse(window.localStorage.vehicleTypeList);
