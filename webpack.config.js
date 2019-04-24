@@ -89,6 +89,11 @@ module.exports = {
                 secure:false,
                 changeOrigin:true
             }
+            // '/ServerHub':{
+            //     target:'http://localhost:8081',
+            //     secure:false,
+            //     changeOrigin:true
+            // }
         }
     }
 }

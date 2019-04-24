@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import * as request from './test';
+//import * as signalr from '@aspnet/signalr';
+import 'signalr';
 import { WebapiService, RequestEntity } from "./Service";
 const service = new WebapiService();
 import app from './Child.vue';
@@ -8,8 +10,9 @@ let vehicleTypeList: Array<any>;
 window.onload = function () {
     var v = new Vue({
         el: "#app",
+        //render:createElment=>createElment(app),
         data: {
-            Columns: [
+            columns: [
                 {
                     field: 'Requestuser',
                     align: 'center',
@@ -21,16 +24,21 @@ window.onload = function () {
                     //formatter: 'formatterDate',
                     title: '发车时间'
                 },
-                {
-                    field: 'Id',
-                    align: 'center',
-                    title: 'Id'
-                },
+                // {
+                //     field: 'Id',
+                //     align: 'center',
+                //     title: 'Id'
+                // },
                 {
                     field: 'Vehicletype',
                     align: 'center',
                     //formatter: 'formatterVehicleType',
                     title: '车辆类型'
+                },
+                {
+                    field: 'Id',
+                    align: "center",
+                    title: '操作'
                 }
             ],
             list: [{
@@ -48,11 +56,11 @@ window.onload = function () {
                 let match = vehicleTypeList.filter((val: any): any => {
                     return val.Diccode === value;
                 });
-                var obj=new request.GetTableData(1,10,"id","asc");
-                obj.GetData().then(data=>{
+                var obj = new request.GetTableData(1, 10, "id", "asc");
+                obj.GetData().then(data => {
                     console.log(data);
                 });
-                let entity:request.default;
+                let entity: request.default;
                 //console.log(match);
                 if (match.length > 0) {
                     //console.log(match[0].Dicname);
@@ -99,11 +107,14 @@ window.onload = function () {
                     }
                 }
                 return format;
-            }
+            },
+            formatterAction(value: any): any {
+                return "<a data-id='" + value + "' class='customUp glyphicon glyphicon-arrow-up'>&nbsp;&nbsp;</a><a data-id='" + value + "' class='customDown glyphicon glyphicon-arrow-down'></a>";
+            }            
         },
         created() {
-            let columns: Array<any> = this.Columns;
-            columns.forEach(c => {
+            let column: Array<any> = this.columns;
+            column.forEach(c => {
                 switch (c.field) {
                     case 'Requestcode':
                         c.align = 'center';
@@ -116,14 +127,38 @@ window.onload = function () {
                     case 'Vehicletype':
                         c.formatter = this.formatterVehicleType;
                         break;
+                    case "Id":
+                        c.formatter = this.formatterAction;
+                        break;
                 }
             });
+            console.log(this.columns);
             service.GetVehicleTypeList().then(data => {
                 vehicleTypeList = data;
                 window.localStorage.vehicleTypeList = JSON.stringify(vehicleTypeList);
             });
+        },
+        mounted(){
+            
         }
     });
+
+    // let connection = $.hubConnection("/ServerHub",{
+    //     useDefaultPath: false,
+    //     qs:"010"
+    //     });
+    // var contosoChatHubProxy = connection.createHubProxy('ServerHub');
+    // contosoChatHubProxy.on("clientHandler", (message: string) => {
+    //     console.log(message);
+    // });
+    // connection.start().done((connection) => {
+    //     console.log('Now connected, connection ID=' + connection.id);
+    //     contosoChatHubProxy.invoke("Hello");
+    // }).fail((error) => {
+    //     console.log('连接失败' + error);
+    //     console.log('Could not connect');
+    // });
+
 }
 
 

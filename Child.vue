@@ -122,26 +122,54 @@
       value="submit"
       v-on:click="clickModifyfunction()"
     >
-    <div class="modal fade" id="phoneDialog" role="dialog" aria-hidden="true" style="width:100%;height:100%;overflow-y:hidden;">
-            <div class="modal-dialog">
-                <div class="modal-content" style="width:400px;height:220px;">
-                    <div class="modal-header">
-                        输入手机号码
-                    </div>
-                    <div class="modal-body" style="width:400px;height:100px;">
-                        <input id="txtPhone" class="form-control col-sm-4" type="text" />
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" style="float:right;margin:10px;">
-                            关闭
-                        </button>
-                        <button type="button" id="phoneSavebtn" data-idval="" @click="PhoneSave()" class="btn btn-primary" style="float:right;margin:10px;">
-                            提交
-                        </button>
-                    </div>
-                </div>
-            </div>
+    <div
+      class="modal fade"
+      id="phoneDialog"
+      role="dialog"
+      aria-hidden="true"
+      style="width:100%;height:100%;overflow-y:hidden;"
+    >
+      <div class="modal-dialog">
+        <div
+          class="modal-content"
+          style="width:400px;height:220px;"
+        >
+          <div class="modal-header">
+            输入手机号码
+          </div>
+          <div
+            class="modal-body"
+            style="width:400px;height:100px;"
+          >
+            <input
+              id="txtPhone"
+              class="form-control col-sm-4"
+              type="text"
+            />
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-default"
+              data-dismiss="modal"
+              style="float:right;margin:10px;"
+            >
+              关闭
+            </button>
+            <button
+              type="button"
+              id="phoneSavebtn"
+              data-idval=""
+              @click="PhoneSave()"
+              class="btn btn-primary"
+              style="float:right;margin:10px;"
+            >
+              提交
+            </button>
+          </div>
         </div>
+      </div>
+    </div>
   </div>
 </template>
 <script lang="ts">
@@ -162,12 +190,14 @@ let UserType: number = 9;
 
 export default Vue.extend({
   name: "parent",
-  props: ["Columns"],
+  props: ["columns"],
   data() {
     return {
       Name: "child request",
       Url:
-        "/api/Tb_Ts_Request/GetListByParam?sortName=time&role=9&filter=&day="+day+"&status="
+        "/api/Tb_Ts_Request/GetListByParam?sortName=time&role=9&filter=&day=" +
+        day +
+        "&status="
     };
   },
   methods: {
@@ -178,7 +208,7 @@ export default Vue.extend({
       //this.$emit("updateByChild", [this.Name, this.Url]);
       $("#phoneDialog").modal("toggle");
     },
-    PhoneSave(){
+    PhoneSave() {
       alert($("#txtPhone").val());
     },
     formattervehicletype(diccode: string): string {
@@ -366,13 +396,13 @@ export default Vue.extend({
     }
   },
   mounted() {
-    day=tool.formatterDate(new Date().toString(), "yyyy-MM-dd");
+    day = tool.formatterDate(new Date().toString(), "yyyy-MM-dd");
     $("#searchDate input").val(
       tool.formatterDate(new Date().toString(), "yyyy-MM-dd")
     );
     $("#TIME").val(tool.formatterDate(new Date().toString(), "yyyy-MM-dd"));
     $("#tb").bootstrapTable({
-      columns: this.Columns
+      columns: this.columns
     });
     $("#searchDate")
       .datetimepicker({
@@ -391,9 +421,17 @@ export default Vue.extend({
         // console.log(ev.date.getTimezoneOffset() );
         // console.log(new Date(ev.date.getTime()+(ev.date.getTimezoneOffset() * 60000)));
         $("#searchDate input").val(
-          tool.formatterDate(new Date(ev.date.getTime()+(ev.date.getTimezoneOffset() * 60000)), "yyyy-MM-dd")
+          tool.formatterDate(
+            new Date(ev.date.getTime() + ev.date.getTimezoneOffset() * 60000),
+            "yyyy-MM-dd"
+          )
         );
-        $("#TIME").val(tool.formatterDate(new Date(ev.date.getTime()+(ev.date.getTimezoneOffset() * 60000)), "yyyy-MM-dd"));
+        $("#TIME").val(
+          tool.formatterDate(
+            new Date(ev.date.getTime() + ev.date.getTimezoneOffset() * 60000),
+            "yyyy-MM-dd"
+          )
+        );
       });
     //$('#tb').bootstrapTable('load', this.data);
     let service = new WebapiService();
@@ -430,11 +468,20 @@ export default Vue.extend({
         //day = parseInt($(".btn-success").attr("data-val") as string);
         sortName = $(this).attr("data-val") as string;
         that.RetrieveStatistic();
+        console.log($(".customUp").length);
       });
+    });
+    $("body").on("click", ".customUp", function() {
+      $(this).parent().parent().insertBefore($(this).parent().parent().prev());
+    });
+    $("body").on("click",".customDown",function() {
+      
+      $(this).parent().parent().insertAfter($(this).parent().parent().next());
     });
   },
   created() {
     //console.log(this.status);
+    
   },
   computed: {
     fixed: {
