@@ -21,6 +21,11 @@ module.exports = {
             'vue$': 'vue/dist/vue.common.js'
         }
     },
+    externals: {
+        jquery: "jQuery",
+        vue: 'Vue',
+        'vee-validate': 'VeeValidate'
+    },
     module: {
         rules: [
             {
@@ -72,28 +77,29 @@ module.exports = {
     plugins: [
         new VueLoaderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.ProvidePlugin({
-            $:"jquery",
-            jQuery:"jquery",
-            'window.jQuery':"jquery"
-        })
+        // new webpack.ProvidePlugin({
+        //     $:"jquery",
+        //     jQuery:"jquery",
+        //     'window.jQuery':"jquery"
+        // })
     ],
     devServer: {
         //contentBase: path.join(__dirname, "publish"),
-        port: 7000,
+        port: 8080,
         inline: true,
         hot: true,
         proxy: {
             '/api/*':{
-                target:'http://localhost:83',
+                target:'http://localhost:8083',
                 secure:false,
                 changeOrigin:true
+            },
+            '/ServiceHub':{
+                target:'http://192.168.1.34:8085',
+                secure:false,
+                ws:false,
+                changeOrigin:true
             }
-            // '/ServerHub':{
-            //     target:'http://localhost:8081',
-            //     secure:false,
-            //     changeOrigin:true
-            // }
         }
     }
 }

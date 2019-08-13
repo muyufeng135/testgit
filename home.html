@@ -1,73 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Vue Demo</title>
-
     
-    <!-- <script src="./Common/main.js"></script> -->
+    <link rel="stylesheet" href="/Style/bootstrap.css">
+    <link rel="stylesheet" href="/Style/bootstrap-table.css">
+    <link rel="stylesheet" href="/Style/bootstrap-datetimepicker.css">
 </head>
 
 <body>
     <div id="app">
-        <App :columns="columns"></App>
-    </div>
-    <div>
-        <ul id="newsTicker">
-
-        </ul>
+        <App></App>
     </div>
     <script src="/Scripts/jquery-3.2.1.js"></script>
-    <!-- <script src="./Style/bootstrap.js"></script> -->
-    <!-- <script src="./Scripts/datetimepicker/bootstrap-datetimepicker.js"></script> -->
+    <script src="/Scripts/bootstrap.min.js"></script>
+    <script src="/Scripts/bootstrap-table.js"></script>
+    <script src="/Scripts/bootstrap-table-zh-CN.js"></script>
+    <script src="/Scripts/datetimepicker/bootstrap-datetimepicker.js"></script>
+    <script src="/Scripts/datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="/Scripts/popover.js"></script>
+    <script src="/Scripts/tooltip.js"></script>
     <script src="/Scripts/jquery.newsTicker.js"></script>
+    <script src="/Scripts/vue.js"></script>
     <script src="/publish/index.js"></script>
-
-    <script src="Scripts/jquery.signalR-2.3.0.min.js"></script>
-    <script lang="ts">
-        $(function () {
-            let messageList = $("#newsTicker").newsTicker({
-                row_height: 60,
-                max_rows: 5,
-                autostart: 1,
-                speed: 1600,
-                duration: 1250
-            });
-            messageList.newsTicker("add", "AAAAAAA");
-            messageList.newsTicker("add", "AAAAAAA");
-            messageList.newsTicker("add", "AAAAAAA");
-            messageList.newsTicker("add", "AAAAAAA");
-            messageList.newsTicker("add", "AAAAAAA");
-            messageList.newsTicker("add", "AAAAAAA");
-            messageList.newsTicker("add", "BBBBBBB");
-            messageList.newsTicker("add", "AAAAAAA");
-            messageList.newsTicker("add", "BBBBBBB");
-            messageList.newsTicker("add", "AAAAAAA");
-            messageList.newsTicker("add", "BBBBBBB");
-            messageList.newsTicker("add", "AAAAAAA");
-            messageList.newsTicker("add", "AAAAAAA");
-            messageList.newsTicker("add", "BBBBBBB");
-            messageList.newsTicker("add", "CCCCCCC");
-            messageList.newsTicker("add", "CCCCCCC");
-            messageList.newsTicker("add", "CCCCCCC");
-            messageList.newsTicker("add", "CCCCCCC");
-            messageList.newsTicker("add", "CCCCCCC");
-            messageList.newsTicker("add", "CCCCCCC");
-            messageList.newsTicker("add", "CCCCCCC");
-        });
-    </script>
-    <style>
-        li {
-            list-style: none;
-        }
-        a,a:hover{
-            text-decoration: none;
-            cursor: pointer;
-        }
-    </style>
+    <!-- <script src="Scripts/jquery.signalR-2.3.0.min.js"></script> -->
 </body>
 
 </html>

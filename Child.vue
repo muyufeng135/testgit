@@ -35,13 +35,13 @@
         id="exprot"
         style="background-color:#00CD00;"
         class='execute-btn btn'
-        onclick="Exprot()"
+        
       >导出用车计划表</button>
       <button
         id="exprotmodi"
         style="background-color:#00CD00;"
         class='execute-btn btn'
-        onclick="Exprotmodi()"
+        
       >导出用车摸底表</button>
       <button
         class='execute-btn btn btn-success btn-day'
@@ -171,33 +171,60 @@
       </div>
     </div>
   </div>
+
 </template>
 <script lang="ts">
 //import * as Common from "./Common/Format";
 import * as tool from "./Common/tool";
 import Vue from "vue";
 import moment from "moment";
-import "./Scripts/datetimepicker/bootstrap-datetimepicker.js";
-import "./Scripts/datetimepicker/bootstrap-datetimepicker.zh-CN.js";
-import "./Style/bootstrap-table.js";
-import "./Style/bootstrap.js";
-import "./Style/bootstrap-table-zh-CN.js";
-import { WebapiService, RequestEntity } from "./Service";
-//const common = new Common.Format();
+
+import { formatterDate } from "./Common/tool";
+import * as request from "./test";
 let day: string = "";
 let sortName: string = "time";
 let UserType: number = 9;
-
+import { WebapiService, RequestEntity } from "./Service";
+const service = new WebapiService();
+let vehicleTypeList: Array<any>;
 export default Vue.extend({
   name: "parent",
-  props: ["columns"],
   data() {
     return {
       Name: "child request",
       Url:
-        "/api/Tb_Ts_Request/GetListByParam?sortName=time&role=9&filter=&day=" +
+        "api/Tb_Ts_Request/GetListByParam?sortName=time&role=9&filter=&day=" +
         day +
-        "&status="
+        "&status=",
+      columns: [
+        {
+          field: "Requestuser",
+          align: "center",
+          title: "申请单位"
+        },
+        {
+          field: "Starttime",
+          align: "center",
+          //formatter: 'formatterDate',
+          title: "发车时间"
+        },
+        // {
+        //     field: 'Id',
+        //     align: 'center',
+        //     title: 'Id'
+        // },
+        {
+          field: "Vehicletype",
+          align: "center",
+          //formatter: 'formatterVehicleType',
+          title: "车辆类型"
+        },
+        {
+          field: "Id",
+          align: "center",
+          title: "操作"
+        }
+      ]
     };
   },
   methods: {
@@ -213,11 +240,9 @@ export default Vue.extend({
     },
     formattervehicletype(diccode: string): string {
       var typeList = JSON.parse(window.localStorage.vehicleTypeList);
-      let match = typeList.filter(
-        (val: any): any => {
-          return val.Diccode === diccode;
-        }
-      );
+      let match = typeList.filter((val: any): any => {
+        return val.Diccode === diccode;
+      });
       //console.log(match);
       if (match.length > 0) {
         //console.log(match[0].Dicname);
@@ -240,14 +265,30 @@ export default Vue.extend({
         } else if (value == 4) {
           return '<span class="label label-primary">已派车</span>';
         } else if (value == 7) {
-          return '<span class="label label-primary">已指派车队</span>';
+          return '<span class="label label-warning">待派车</span>';
+        } else if (value == 3) {
+          return '<span class="label" style="background-color:#87CEFA">车队待确认</span>';
+        } else if (value == 8) {
+          return '<span class="label" style="background-color:#BA55D3">车队驳回</span>';
+        } else if (value == 6) {
+          return '<span class="label" style="background-color:#00CED1">无效派车</span>';
+        } else if (value == 9) {
+          return '<span class="label" style="background-color:#00FF00">已完结</span>';
         }
       } else if (UserType == 5) {
         //车队
         if (value == 7) {
-          return '<span class="label label-success">已指派车队</span>';
+          return '<span class="label label-info">待派车</span>';
+        } else if (value == 8) {
+          return '<span class="label label-danger">已驳回</span>';
+        } else if (value == 4) {
+          return '<span class="label label-success">已派车</span>';
+        } else if (value == 6) {
+          return '<span class="label" style="background-color:#00CED1">无效派车</span>';
+        } else if (value == 9) {
+          return '<span class="label" style="background-color:#00FF00">已完结</span>';
         } else {
-          return '<span class="label label-danger">未指派车队</span>';
+          return '<span class="label label-warning">待指派车队</span>';
         }
       } else {
         //塔通、威龙、生产
@@ -393,6 +434,35 @@ export default Vue.extend({
           }
         }
       });
+    },
+    formatterVehicleType(value: any): string {
+      let match = vehicleTypeList.filter((val: any): any => {
+        return val.Diccode === value;
+      });
+      var obj = new request.GetTableData(1, 10, "id", "asc");
+      obj.GetData().then(data => {
+        console.log(data);
+      });
+      let entity: request.default;
+      //console.log(match);
+      if (match.length > 0) {
+        //console.log(match[0].Dicname);
+        return match[0].Dicname;
+      } else {
+        return "";
+      }
+    },
+    formatterAction(value: any): any {
+      return (
+        "<a data-id='" +
+        value +
+        "' class='customUp glyphicon glyphicon-arrow-up'>&nbsp;&nbsp;</a><a data-id='" +
+        value +
+        "' class='customDown glyphicon glyphicon-arrow-down'></a>"
+      );
+    },
+    formatterDate(val: any) {
+      return formatterDate(val, "yyyy-MM-dd hh:mm:ss");
     }
   },
   mounted() {
@@ -420,18 +490,18 @@ export default Vue.extend({
       .on("changeDate", function(ev: any) {
         // console.log(ev.date.getTimezoneOffset() );
         // console.log(new Date(ev.date.getTime()+(ev.date.getTimezoneOffset() * 60000)));
-        $("#searchDate input").val(
-          tool.formatterDate(
-            new Date(ev.date.getTime() + ev.date.getTimezoneOffset() * 60000),
-            "yyyy-MM-dd"
-          )
-        );
-        $("#TIME").val(
-          tool.formatterDate(
-            new Date(ev.date.getTime() + ev.date.getTimezoneOffset() * 60000),
-            "yyyy-MM-dd"
-          )
-        );
+        // $("#searchDate input").val(
+        //   tool.formatterDate(
+        //     new Date(ev.date.getTime() + ev.date.getTimezoneOffset() * 60000),
+        //     "yyyy-MM-dd"
+        //   )
+        // );
+        // $("#TIME").val(
+        //   tool.formatterDate(
+        //     new Date(ev.date.getTime() + ev.date.getTimezoneOffset() * 60000),
+        //     "yyyy-MM-dd"
+        //   )
+        // );
       });
     //$('#tb').bootstrapTable('load', this.data);
     let service = new WebapiService();
@@ -472,16 +542,53 @@ export default Vue.extend({
       });
     });
     $("body").on("click", ".customUp", function() {
-      $(this).parent().parent().insertBefore($(this).parent().parent().prev());
+      $(this)
+        .parent()
+        .parent()
+        .insertBefore(
+          $(this)
+            .parent()
+            .parent()
+            .prev()
+        );
     });
-    $("body").on("click",".customDown",function() {
-      
-      $(this).parent().parent().insertAfter($(this).parent().parent().next());
+    $("body").on("click", ".customDown", function() {
+      $(this)
+        .parent()
+        .parent()
+        .insertAfter(
+          $(this)
+            .parent()
+            .parent()
+            .next()
+        );
     });
   },
   created() {
-    //console.log(this.status);
-    
+    let column: Array<any> = this.columns;
+    column.forEach(c => {
+      switch (c.field) {
+        case "Requestcode":
+          c.align = "center";
+          break;
+        case "Starttime":
+        case "Requesttime":
+          c.formatter = this.formatterDate;
+          c.align = "center";
+          break;
+        case "Vehicletype":
+          c.formatter = this.formatterVehicleType;
+          break;
+        case "Id":
+          c.formatter = this.formatterAction;
+          break;
+      }
+    });
+    console.log(this.columns);
+    service.GetVehicleTypeList().then(data => {
+      vehicleTypeList = data;
+      window.localStorage.vehicleTypeList = JSON.stringify(vehicleTypeList);
+    });
   },
   computed: {
     fixed: {
@@ -496,13 +603,6 @@ export default Vue.extend({
   }
 });
 </script>
-<style>
-/* @import './node_modules/bootstrap/dist/css/bootstrap.css';
- @import './node_modules/bootstrap-table/dist/bootstrap-table.css';  */
-@import "./Style/bootstrap.css";
-@import "./Style/bootstrap-table.css";
-@import "./Style/bootstrap-datetimepicker.css";
-</style>
 
 
 
