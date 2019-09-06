@@ -13,14 +13,14 @@ let router = new vueRouter({
     //配置路由，这里是个数组
     {
       //每一个链接都是一个对象
-      path: "/Eqstatus", //链接路径
-      name: "", //路由名称，
+      path: "/eqststus", //链接路径
+      name: "eqststus", //路由名称，
       component: eqststus //对应的组件模板
     },
     {
       //每一个链接都是一个对象
       path: "/request", //链接路径
-      name: "", //路由名称，
+      name: "request", //路由名称，
       component: request //对应的组件模板
     }
   ]

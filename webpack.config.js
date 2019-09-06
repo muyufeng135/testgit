@@ -95,7 +95,7 @@ module.exports = {
                 changeOrigin:true
             },
             '/ServiceHub':{
-                target:'http://192.168.1.34:8085',
+                target:'http://192.168.132.254:5000',
                 secure:false,
                 ws:false,
                 changeOrigin:true
